@@ -20,9 +20,11 @@ testfile = thisdir2 + 'test.csv'
 tnsefile = thisdir + 'tsne.csv'
 xgbfile = thisdir + 'xgb.csv'
 predfile = thisdir2 + 'pred.csv'
+counterfile = thisdir + 'counter.csv'
 
 train = np.loadtxt(trainfile, delimiter=',', skiprows=1, converters={0: lambda x:int(x == '?'), 94: lambda x:int(x[6])-1 } )[:,1:]
 test = np.loadtxt(testfile, delimiter=',', skiprows=1, converters={0: lambda x:int(x == '?') } )[:,1:]
+counter = np.loadtxt(counterfile, delimiter=',').reshape([1])[0]
 
 y = train[:,-1]
 x = np.concatenate((train[:,:-1],test), axis = 0)
@@ -67,7 +69,11 @@ tmpL = trainlen
 trind = np.arange(trainlen)
 gtree = 200
 nloops = 240
-for z in range(nloops):
+
+if counter > 0:
+    pred = np.loadtxt(predfile, delimiter=',')
+
+for z in range(counter, nloops):
     print z
     tmpS1 = np.random.choice(trind, size=tmpL, replace=True)
     tmpS2 = np.setdiff1d(trind, tmpS1)
@@ -105,5 +111,7 @@ for z in range(nloops):
     bst = xgb.train(param, xgtrain, num_round, watchlist)
     pred0 = bst.predict(xgtest)
     pred = pred + pred0
+    np.savetxt(counterfile, z, delimiter=',', newline='\n')
+    np.savetxt(predfile, pred, delimiter=',', newline='\n')
 pred = pred / (nloops+1)
 np.savetxt(predfile, pred, delimiter=',', newline='\n')
