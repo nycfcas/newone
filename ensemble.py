@@ -111,7 +111,7 @@ for z in range(counter, nloops):
     bst = xgb.train(param, xgtrain, num_round, watchlist)
     pred0 = bst.predict(xgtest)
     pred = pred + pred0
-    np.savetxt(counterfile, z, delimiter=',', newline='\n')
+    np.savetxt(counterfile, np.array([z]), delimiter=',', newline='\n')
     np.savetxt(predfile, pred, delimiter=',', newline='\n')
 pred = pred / (nloops+1)
 np.savetxt(predfile, pred, delimiter=',', newline='\n')
