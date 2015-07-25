@@ -13,8 +13,8 @@ def loaddata(file):
 tsnesaved = True
 xgbsaved = True
 
-thisdir = '/home/jr/Documents/Kaggle/Otto Group/TrainingData/'
-thisdir2 = '/home/jr/Documents/Kaggle/Otto Group/TestData/'
+thisdir = ''
+thisdir2 = ''
 trainfile = thisdir + 'train.csv'
 testfile = thisdir2 + 'test.csv'
 tnsefile = thisdir + 'tsne.csv'
@@ -24,7 +24,7 @@ counterfile = thisdir + 'counter.csv'
 
 train = np.loadtxt(trainfile, delimiter=',', skiprows=1, converters={0: lambda x:int(x == '?'), 94: lambda x:int(x[6])-1 } )[:,1:]
 test = np.loadtxt(testfile, delimiter=',', skiprows=1, converters={0: lambda x:int(x == '?') } )[:,1:]
-counter = np.loadtxt(counterfile, delimiter=',').reshape([1])[0]
+counter = np.loadtxt(counterfile, delimiter=',').reshape([1])[0].astype(int)
 
 y = train[:,-1]
 x = np.concatenate((train[:,:-1],test), axis = 0)
